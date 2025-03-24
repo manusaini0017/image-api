@@ -162,6 +162,7 @@
                 document.querySelector("#output").innerHTML = '';
 
                 if (i.results.length == 0) {
+                    document.querySelector("button").removeAttribute("disabled")
                     document.querySelector("#output").innerHTML = '<p class="no-results"></p>';
 
                     let notfound='No images found!';
