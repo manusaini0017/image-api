@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            /* text-align: center; */
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .findimage{text-align: center;}
+
+        h1 {
+            margin-bottom: 20px;
+            
+            background: linear-gradient(45deg, #ff416c, #ff4b2b, #007bff, #00c9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 60%;
+            max-width: 400px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+           
+            color:white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #output {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+           
+          
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        .no-results {
+            font-size: 3rem;
+            color: red;
+            font-weight: bold;
+            font-style: italic;
+           
+        }
+
+        @media (max-width: 468px) {
+            input {
+                width: 70%;
+            }
+
+            .no-results{
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    
+    <div class="findimage">
+        <h1></h1>
+        <form class="search-container">
+            <input type="search" placeholder="Search images...">
+            <button>Search</button>
+        </form>
+        
+        <div id="output"></div>
+    </div>
+    
+    <script>
+        "use strict";
+
+
+        window.addEventListener("load", function(){
+            let h1='Image Search App'
+
+            let arry=h1.split("");
+            let collection='';
+            arry.forEach((i, index)=>{
+                setTimeout(()=>{
+                    collection+=i
+                    document.querySelector("h1").innerHTML=collection;
+                }, 100*index)
+
+                
+            })
+
+            
+      
+        })
+
+
+        document.querySelector("input").addEventListener("input", function(){
+            if(document.querySelector("input").value==''){
+                document.querySelector("#output").innerHTML = '';
+            }
+        })
+
+        document.querySelector("form").addEventListener("submit", function(e) {
+           e.preventDefault();
+           document.querySelector("button").setAttribute("disabled", "")
+            let key = 'SGWKMLeYTNSZFlduK5zvKVDpRCL3xDYhp0HGwVQGFl8'; // Unsplash API Key
+            let query = document.querySelector("input").value.trim();  
+
+            let url = `https://api.unsplash.com/search/photos?query=${query}&per_page=9&client_id=${key}`;
+
+            fetch(url).then(i => i.json()).then(i => {
+                console.log(i);
+
+
+
+                document.querySelector("#output").innerHTML = '';
+
+                if (i.results.length == 0) {
+                    document.querySelector("#output").innerHTML = '<p class="no-results"></p>';
+
+                    let notfound='No images found!';
+
+                    let arry=notfound.split("");
+            let collection='';
+            arry.forEach((i, index)=>{
+                setTimeout(()=>{
+                    collection+=i
+                    document.querySelector(".no-results").innerHTML=collection;
+                }, 100*index)
+
+                
+            })
+
+
+
+                } else {
+                    document.querySelector("button").removeAttribute("disabled")
+                    i.results.forEach(e => {
+                        document.querySelector("#output").innerHTML += `<img src="${e.urls.small}" alt="${e.alt_description}">`;
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
